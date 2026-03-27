@@ -20,7 +20,9 @@ class BinanceWebSocket:
         """Подключается к WebSocket и подписывается на потоки."""
         stream_names = "/".join(self.streams)
         url = f"{self.base_url}/{stream_names}"
+        print(f"DEBUG: Connecting to {url}")
         self.websocket = await websockets.connect(url)
+        print("DEBUG: Connected")
         asyncio.create_task(self._receive_messages())
 
     async def _receive_messages(self):
@@ -33,6 +35,7 @@ class BinanceWebSocket:
                 if stream:
                     symbol_raw = stream.split('@')[0].upper()
                     price = float(data['data']['c'])  # последняя цена
+                    print(f"DEBUG: Received {symbol_raw} price {price}")
                     # Преобразуем в формат CCXT
                     if symbol_raw == 'BTCUSDT':
                         self.prices['BTC/USDT'] = price
@@ -40,6 +43,7 @@ class BinanceWebSocket:
                         self.prices['ETH/BTC'] = price
                     elif symbol_raw == 'ETHUSDT':
                         self.prices['ETH/USDT'] = price
+                    print(f"DEBUG: Prices now: {self.prices}")
             except websockets.ConnectionClosed:
                 print("WebSocket connection closed. Reconnecting...")
                 await self.reconnect()
