@@ -31,14 +31,14 @@ class BinanceWebSocket:
                 data = json.loads(message)
                 stream = data.get('stream')
                 if stream:
-                    symbol = stream.split('@')[0].upper()
+                    symbol_raw = stream.split('@')[0].upper()
                     price = float(data['data']['c'])  # последняя цена
-                    # Преобразуем в формат ccxt: BTC/USDT
-                    if symbol == 'BTCUSDT':
+                    # Преобразуем в формат CCXT
+                    if symbol_raw == 'BTCUSDT':
                         self.prices['BTC/USDT'] = price
-                    elif symbol == 'ETHBTC':
+                    elif symbol_raw == 'ETHBTC':
                         self.prices['ETH/BTC'] = price
-                    elif symbol == 'ETHUSDT':
+                    elif symbol_raw == 'ETHUSDT':
                         self.prices['ETH/USDT'] = price
             except websockets.ConnectionClosed:
                 print("WebSocket connection closed. Reconnecting...")
