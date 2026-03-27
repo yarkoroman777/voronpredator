@@ -37,8 +37,9 @@ async def main():
     # Основной цикл проверки спреда
     while True:
         # Проверяем, есть ли цены
-        if not all(k in ws.prices for k in ['BTC/USDT', 'ETH/BTC', 'ETH/USDT']):
-            # Если цен нет, ждём 5 секунд и повторяем
+        missing = [k for k in ['BTC/USDT', 'ETH/BTC', 'ETH/USDT'] if k not in ws.prices]
+        if missing:
+            print(f"DEBUG: Missing prices: {missing}. Current keys: {list(ws.prices.keys())}")
             await asyncio.sleep(5)
             continue
 
