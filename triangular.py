@@ -14,10 +14,8 @@ def calculate_spread(prices):
     except KeyError:
         return None
 
-    # Прямой путь: купить BTC за USDT, затем ETH за BTC, затем ETH обратно в USDT
-    # 1 USDT -> 1/btc_usdt BTC -> (1/btc_usdt) * eth_btc ETH -> ((1/btc_usdt) * eth_btc) * eth_usdt USDT
-    final_usdt = (1 / btc_usdt) * eth_btc * eth_usdt
-    # Спред = (конечная сумма - 1) * 100%
+    # Исправленная формула: 1 USDT -> (1/btc_usdt) BTC -> (1/btc_usdt) * (1/eth_btc) ETH -> (1/btc_usdt)*(1/eth_btc)*eth_usdt USDT
+    final_usdt = (1 / btc_usdt) * (1 / eth_btc) * eth_usdt
     spread = (final_usdt - 1) * 100
     return spread
 
@@ -26,7 +24,6 @@ def get_expected_profit(capital_usdt, spread_percent):
     Возвращает ожидаемую прибыль в USDT с учётом комиссий.
     spread_percent: спред до вычета комиссий (в %).
     """
-    # После вычета комиссий (3 сделки по 0.1% = 0.3%)
     net_spread = spread_percent - (config.TRADE_FEE * 3 * 100)
     if net_spread <= 0:
         return 0
