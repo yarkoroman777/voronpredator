@@ -38,6 +38,7 @@ async def main():
     while True:
         # Проверяем, есть ли цены
         if not all(k in ws.prices for k in ['BTC/USDT', 'ETH/BTC', 'ETH/USDT']):
+            # Если цен нет, ждём 5 секунд и повторяем
             await asyncio.sleep(5)
             continue
 
