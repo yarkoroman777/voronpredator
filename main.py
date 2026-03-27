@@ -46,6 +46,9 @@ async def main():
             await asyncio.sleep(5)
             continue
 
+        # ВСЕГДА выводим текущий спред (даже если он ниже порога)
+        logger.log(f"📊 Текущий спред: {spread:.2f}%")
+
         # Фильтр по минимальному спреду
         if spread >= config.MIN_SPREAD_PERCENT:
             profit = get_expected_profit(usdt_balance, spread)
@@ -58,9 +61,6 @@ async def main():
                     logger.log(f"💰 Новый баланс: {usdt_balance:.2f} USDT")
                 # Небольшая пауза после сделки, чтобы не зафлудить
                 await asyncio.sleep(30)
-        else:
-            # Можно логировать редко
-            pass
 
         # Пауза между проверками спреда
         await asyncio.sleep(20)
